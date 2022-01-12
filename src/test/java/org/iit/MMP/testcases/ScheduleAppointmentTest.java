@@ -7,19 +7,17 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 //import junit.framework.Assert;
 
-public class ScheduleAppointmentTest extends BaseTest {
+public class ScheduleAppointmentTest extends mmpBaseTest {
 		
 	@Test(priority=1)
 	   public void scheduleAppointment() throws Exception
 	   {
 		
-		   logger=reports.createTest("Book Appointment");
-		   
 		   HelperClass helper = new HelperClass(driver);		   
 		   helper.launchApplication(prop.getProperty("patienturl"));	
-		   logger.info("opened patient url");
+		 
 		   helper.loginCredentials(prop.getProperty("patientUser"),prop.getProperty("patientPassword")); 	
-		   logger.pass("Login Successful");
+		   
 		   helper.navigatetoModule("Schedule Appointment");		   		
 		   ScehduleAppointmentModule s_appointment = new ScehduleAppointmentModule(driver);
 		   
@@ -35,7 +33,7 @@ public class ScheduleAppointmentTest extends BaseTest {
 		   System.out.println("input given:"+expHashMap);
 		   HashMap<String,String> actualHashMap = s_appointment.patientPortal();
 		   System.out.println("Chk if input entered:"+actualHashMap);	
-		   logger.pass("Booking Appointment Successful");
+		   //logger.pass("Booking Appointment Successful");
 		   Assert.assertTrue(expHashMap.equals(actualHashMap));
 		  
 		   //helper.tearDown();		   

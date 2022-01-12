@@ -31,11 +31,6 @@ public class HelperClass  {
 		driver.findElement(By.xpath("//span[contains(text(),'"+moduleName+"')]")).click();
 	}
 		
-	/*
-	public void tearDown()
-	{
-		driver.close();
-	}
-*/
+
 	
 }

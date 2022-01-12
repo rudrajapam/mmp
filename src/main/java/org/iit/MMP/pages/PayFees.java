@@ -1,124 +1,92 @@
 package org.iit.MMP.pages;
 
 import java.util.List;
-//import java.util.concurrent.TimeUnit;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-//import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
-//import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class PayFees {
-	
+
 	WebDriver driver;
+	Select cardType_dropdown, exp_Month, exp_Year;
+
+	@FindBy(xpath = "//button[contains(text(),'Pay Now')]")
+	WebElement payNow;
+
+	@FindBy(xpath = "//select[@name='amount']")
+	WebElement amount;
+	@FindBy(xpath = "//input[@value='Continue']")
+	WebElement continueButton;
+
+	@FindBy(xpath = "//input[@placeholder='First  & Last Name']")
+	WebElement customerName;
+	@FindBy(xpath = "//select[@name='Card_name']")
 	WebElement cardType;
-	Select cardType_dropdown,exp_Month,exp_Year;
-	WebElement month,year;
-	String cCardNo;
-	int total = 0;
-	String custName;
-	
-	public PayFees(WebDriver driver)
-	{
-		this.driver=driver;
+
+	@FindBy(xpath = "//input[@placeholder='Card Number']")
+	WebElement cardNumber;
+
+	@FindBy(xpath = "//select[@name='CCExpiresMonth']")
+	WebElement month;
+	@FindBy(xpath = "//select[@name='CCExpiresYear']")
+	WebElement year;
+	@FindBy(xpath = "//input[@id='cvv']")
+	WebElement ccv;
+
+	@FindBy(xpath = "//input[@value='submit']")
+	WebElement submitButton;
+
+	public PayFees(WebDriver driver) {
+		this.driver = driver;
+		PageFactory.initElements(driver, this);
+	}
+
+	public void payNowClick() {
+		payNow.click();
+	}
+		
+	public void amountToBePaid(String optionValue) {
+				
+		Select s = new Select(amount);
+		List<WebElement> amount_options = s.getOptions();
+		for (WebElement options : amount_options) {
+			if (options.getAttribute("value").equals(optionValue)) {
+				s.selectByValue(optionValue);
+
+			}
+		}			
 	}
 	
-	public boolean creditCardNoCheck(String cCardNo)
-	 {
-				 
-		 if(cCardNo.length() < 15 || cCardNo.length() > 16)
-		 {
-			 System.out.println("Please check your card number");
-		 }		 
-		
-		 // creating an integer array for storing the cc no.
-		 int [] cardnumberChk = new int[cCardNo.length()];
-		 
-		 for(int i=0;i<cCardNo.length();i++)
-		 {
-			 cardnumberChk[i] = Integer.parseInt(cCardNo.substring(i,i+1));
-		 }
-		 
-		 //looping thr each digit of the cc no
-		 for(int i=cardnumberChk.length-2; i>=0;i=i-2)
-		 {
-			 int temp = cardnumberChk[i];
-			 temp= temp *2;
-			 
-			 if(temp >9)
-			 {
-				 temp= temp % 10 +1;
-			 }
-			 cardnumberChk[i]=temp;
-		 }
-		 
-		 for(int j =0; j < cardnumberChk.length; j++)
-		  {
-		    
-			total = total + cardnumberChk[j]; 
-		  }
-		 
-		 if (total % 10==0)
-		 {
-			 return true;
-		 }
-		 else 
-		 {
-			 return false;
-		 }	 
- }
-		
-	public  boolean CustName(String custName)
-	{
-					
-		if(custName != null  && custName.matches("^[A-za-z \']*$"))
-		{
-		   System.out.println("valid name");
-		   return true;
-		}
-	    return false;
-	}	
-	
-	
-	public void amountToBePaid(String optionValue)
-	{		
-		driver.findElement(By.xpath("//button[contains(text(),'Pay Now')]")).click();		
-		WebElement amount = driver.findElement(By.xpath("//select[@name='amount']"));
-		Select s = new Select(amount);			
-		
-		List<WebElement> amount_options = s.getOptions();
-		   for (WebElement options : amount_options) 
-		   {
-			 if(options.getAttribute("value").equals(optionValue))
-				{
-				   s.selectByValue(optionValue);
-				   
-				}
-			}
-	     driver.findElement(By.xpath("//input[@value='Continue']")).click();		
-	 }
-	
-	public void CCardDetails(String custName,String cCardTypeValue, String cCardNo, String expMonth, String expYear,String Ccard_CVV)
-	 {
-				
-			 driver.findElement(By.xpath("//input[@placeholder='First  & Last Name']")).sendKeys(custName);
-			 cardType=driver.findElement(By.xpath("//select[@name='Card_name']"));
-			 cardType_dropdown= new Select(cardType);
-			 cardType_dropdown.selectByValue(cCardTypeValue);						
-			 driver.findElement(By.xpath("//input[@placeholder='Card Number']")).sendKeys(cCardNo); 
-			 
-			 month = driver.findElement(By.xpath("//select[@name='CCExpiresMonth']"));
-			 exp_Month=new Select(month);			
-			 exp_Month.selectByValue(expMonth);
+	public void continueButtonClick() {
+		continueButton.click();
+	}
 			
-			 year=driver.findElement(By.xpath("//select[@name='CCExpiresYear']"));
-			 exp_Year=new Select(year);			 
-			 exp_Year.selectByValue(expYear);	 
-	 
-			 driver.findElement(By.xpath("//input[@id='cvv']")).sendKeys(Ccard_CVV);
-			 driver.findElement(By.xpath("//input[@value='submit']")).click();
-		
-	}	
+	public void submitButtonClick() {
+		submitButton.click();
 
+	}
+	
+	public void CCardDetails(String custName, String cCardTypeValue, String cCardNo, String expMonth, String expYear,
+			String Ccard_CVV) 
+	{
+
+		customerName.sendKeys(custName);
+		
+		cardType_dropdown = new Select(cardType);
+		cardType_dropdown.selectByValue(cCardTypeValue);
+		
+		cardNumber.sendKeys(cCardNo);	
+		
+		exp_Month = new Select(month);
+		exp_Month.selectByValue(expMonth);
+	
+		exp_Year = new Select(year);
+		exp_Year.selectByValue(expYear);
+
+		ccv.sendKeys(Ccard_CVV);
+
+	}
+	
 }
